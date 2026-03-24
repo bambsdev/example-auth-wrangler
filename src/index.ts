@@ -1,0 +1,66 @@
+import { ExecutionContext, Hono } from "hono";
+
+import {
+  customLogger,
+  authRoutes,
+  settingRoutes,
+  cleanupExpiredTokens,
+  type AuthBindings,
+  type AuthVariables,
+} from "@bambsdev/auth";
+
+import { dbMiddleware, type BukukitaVariables } from "./middleware/db";
+
+const app = new Hono<{
+  Bindings: AuthBindings;
+  Variables: BukukitaVariables;
+}>();
+
+// Logger
+app.use("*", customLogger());
+
+// DB Middleware — Pakai middleware lokal supaya mengenali tabel bukukita
+app.use("/auth/*", dbMiddleware);
+app.use("/api/*", dbMiddleware);
+
+// Email Config Middleware — Contoh kustomisasi email untuk consumer
+
+// Mount auth routes
+app.route("/auth", authRoutes);
+app.route("/api/settings", settingRoutes);
+
+// Test Route — Verifikasi akses tabel Auth dan tabel lokal
+app.get("/api/test-db", async (c) => {
+  const db = c.get("db");
+
+  // Cobak query tabel Auth (users)
+  const usersCount = await db.query.users.findMany({ limit: 1 });
+
+  // Coba query tabel lokal (books)
+  const booksCount = await db.query.books.findMany({ limit: 1 });
+
+  return c.json({
+    status: "ok",
+    message: "Drizzle recognizes both Auth and Local schemas!",
+    data: {
+      hasUsers: usersCount,
+      hasBooks: booksCount,
+    },
+  });
+});
+
+export default {
+  // HTTP requests
+  fetch: app.fetch,
+
+  // Cron trigger: hapus expired tokens
+  async scheduled(
+    _event: ScheduledEvent,
+    env: AuthBindings,
+    _ctx: ExecutionContext,
+  ) {
+    await cleanupExpiredTokens(
+      env.LOCAL_DATABASE_URL || env.HYPERDRIVE.connectionString,
+    );
+  },
+};

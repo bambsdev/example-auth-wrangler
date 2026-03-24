@@ -1,0 +1,635 @@
+# ================================================================
+@base   = https://api-bukukita.ibrohimsairony.workers.dev
+# @base   = http://localhost:8787
+@ct     = application/json
+
+# ── Isi setelah dapat response login ────────────────────────────
+@at_web      = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNmIwNTNkMC0yOTAzLTQ3ODktODlhNC03ZTk1YTEwY2JhMjciLCJqdGkiOiJmOWM0ZmM4Yy1jZTMxLTQwNGEtODc5MS05NWE2ZmM3ZGY1ZGEiLCJ0eXBlIjoiYWNjZXNzIiwiY2xpZW50Ijoid2ViIiwiaWF0IjoxNzc0MzY4MTkyLCJleHAiOjE3NzQzNjkwOTJ9.liw-z7h-ve9QAvV_E2JXICYHW-J9k4lxS6y0mAmL3f4
+@rt_web      =  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNmIwNTNkMC0yOTAzLTQ3ODktODlhNC03ZTk1YTEwY2JhMjciLCJqdGkiOiIwMzlhZTY0NC1hOWY0LTQ1ZDEtYTMxOC1iZTU1ZGU5MTZjNGEiLCJmYW1pbHlJZCI6IjFiZjM0ZDU0LWY4NmMtNGNkOS1hYWE3LTA2MmJjOGRjOTZkNiIsInR5cGUiOiJyZWZyZXNoIiwiY2xpZW50Ijoid2ViIiwiaWF0IjoxNzc0MzY4MTkyLCJleHAiOjE3NzQ5NzI5OTJ9.YpnSxQ9yqyvbpVdBMp8FxUvyeCwVN5UHV0iPSIgTfsQ
+@at_mobile   = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Njg3ZTYyNS05Y2FkLTQxYzktYjBhOS05ZGE3NTJhMjYzNGMiLCJqdGkiOiI2NTg4NGM0Ni05NDI4LTQwNzYtYWE2NC02OTljNDU3OTc1M2EiLCJ0eXBlIjoiYWNjZXNzIiwiY2xpZW50IjoibW9iaWxlIiwiaWF0IjoxNzcyNTg0MzE2LCJleHAiOjE3NzI1ODc5MTZ9.A8LgQUyV0ebX_26BwFVyJj4j28sl0Zc8Zek5phrWHUc
+@rt_mobile   = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Njg3ZTYyNS05Y2FkLTQxYzktYjBhOS05ZGE3NTJhMjYzNGMiLCJqdGkiOiJhMGEyZGU5OS00YmViLTQyNGQtOGJjMy1mMjdjZjE2MjE1ZGUiLCJmYW1pbHlJZCI6IjYxNGY0NDI4LTQ3MTUtNDg2YS1hOThhLTAxZDNkZDYzMGQzNCIsInR5cGUiOiJyZWZyZXNoIiwiY2xpZW50IjoibW9iaWxlIiwiaWF0IjoxNzcyNTg0MzE2LCJleHAiOjE3ODgxMzYzMTZ9.ivAfhAFV_xnDz25F4JEpv-mgeIegd5I8oorc5LyeuKM
+@at_desktop = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Njg3ZTYyNS05Y2FkLTQxYzktYjBhOS05ZGE3NTJhMjYzNGMiLCJqdGkiOiIxMDk1OTNhNi02MmEwLTQ0NzAtOGU3ZS0xMWE5NDhjNzZjOTgiLCJ0eXBlIjoiYWNjZXNzIiwiY2xpZW50IjoiZGVza3RvcCIsImlhdCI6MTc3MjU4NTAyMSwiZXhwIjoxNzcyNTg2ODIxfQ.8ithPbDj_m4BN9bSYixnmzzb7lmBA3j6aeJddrQRQak
+@rt_desktop = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Njg3ZTYyNS05Y2FkLTQxYzktYjBhOS05ZGE3NTJhMjYzNGMiLCJqdGkiOiIwZGFjYTYyNC1iYWRmLTQ0NDQtYjc3Zi1jY2I0OTM5M2UxYjUiLCJmYW1pbHlJZCI6IjhiNDc5ZWZlLTBiMDItNDNlMS1iNzg3LWI1MTZmODdiMzBiNiIsInR5cGUiOiJyZWZyZXNoIiwiY2xpZW50IjoiZGVza3RvcCIsImlhdCI6MTc3MjU4NTQ1NywiZXhwIjoxNzc1MTc3NDU3fQ.6IefwvKTl0pDm1AlNIthUfsFeOd75uAFPSCfDQfBEf8
+@session_id  = f520e77e-2b19-44fc-a406-420a495a0a3e
+
+
+# ================================================================
+# 0. HEALTH CHECK
+# ================================================================
+
+### ✅ Server hidup?
+# Expected → 200 { status: "ok", timestamp: "..." }
+GET {{base}}/health
+
+
+# ================================================================
+# 1. REGISTER
+# ================================================================
+
+### ✅ Register user pertama (untuk login web)
+# Expected → 201 { data: { id, email, createdAt } }
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{
+  "email": "belajarbarengmasbro@gmail.com",
+  "password": "Password123"
+}
+
+###
+
+### ✅ Register user kedua (untuk login mobile)
+# Expected → 201
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{
+  "email": "mobile@example.com",
+  "password": "Password123"
+}
+
+###
+
+### ❌ Email sudah terdaftar → 409 EMAIL_TAKEN
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{
+  "email": "web@example.com",
+  "password": "Password123"
+}
+
+###
+
+### ❌ Password terlalu pendek → 400 VALIDATION_ERROR
+# Expected → "Password minimal 8 karakter"
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{
+  "email": "baru@example.com",
+  "password": "abc"
+}
+
+###
+
+### ❌ Tanpa huruf kapital → 400 VALIDATION_ERROR
+# Expected → "Password harus ada huruf kapital"
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{
+  "email": "baru@example.com",
+  "password": "password123"
+}
+
+###
+
+### ❌ Tanpa angka → 400 VALIDATION_ERROR
+# Expected → "Password harus ada angka"
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{
+  "email": "baru@example.com",
+  "password": "PasswordOnly"
+}
+
+###
+
+### ❌ Format email tidak valid → 400 VALIDATION_ERROR
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{
+  "email": "bukan-email",
+  "password": "Password123"
+}
+
+###
+
+### ❌ Body kosong → 400
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{}
+
+###
+
+### ✅ Email uppercase → tersimpan lowercase
+# Expected → 201, email: "uppercase@example.com"
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{
+  "email": "UPPERCASE@EXAMPLE.COM",
+  "password": "Password123"
+}
+
+
+# ================================================================
+# 2. LOGIN
+# ================================================================
+
+### ✅ Login web
+# refreshToken TTL = 7 hari
+# → Salin accessToken ke @at_web
+# → Salin refreshToken ke @rt_web
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 127.0.0.1
+User-Agent: Mozilla/5.0 Chrome/120 (Web Browser)
+
+{
+  "email": "ibrohimsairony@gmail.com",
+  "password": "NewPassword123!",
+  "clientType": "web"
+}
+
+###
+
+### ✅ Login mobile
+# refreshToken TTL = 90 hari
+# → Salin accessToken ke @at_mobile
+# → Salin refreshToken ke @rt_mobile
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 127.0.0.1
+User-Agent: Dart/3.0 FlutterApp/1.0 (Android)
+
+{
+  "email": "mobile@example.com",
+  "password": "Password123",
+  "clientType": "mobile"
+}
+
+###
+
+### ✅ Login desktop
+# refreshToken TTL = 30 hari
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 127.0.0.1
+User-Agent: Electron/28.0 MyApp/1.0 (Windows)
+
+{
+  "email": "web@example.com",
+  "password": "Password123",
+  "clientType": "desktop"
+}
+
+###
+
+### ❌ Password salah → 401 INVALID_CREDENTIALS + rate limit +1
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 127.0.0.1
+
+{
+  "email": "web@example.com",
+  "password": "salah",
+  "clientType": "web"
+}
+
+###
+
+### ❌ Email tidak terdaftar → 401
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 127.0.0.1
+
+{
+  "email": "tidakada@example.com",
+  "password": "Password123",
+  "clientType": "web"
+}
+
+
+# ================================================================
+# 3. PROTECTED ROUTES — SESSIONS
+# ================================================================
+
+### ✅ Lihat active sessions (web)
+# Request #1 → Cache miss → 1x KV read → cache "0" selama 60 detik
+# Wrangler log: KV read terjadi
+GET {{base}}/auth/sessions
+Authorization: Bearer {{at_web}}
+
+###
+
+### ✅ Request #2 dalam 60 detik (NO KV READ)
+# Cache API HIT "0" → tidak ada KV operation di log
+# Ini membuktikan negative cache bekerja
+GET {{base}}/auth/sessions
+Authorization: Bearer {{at_web}}
+
+###
+
+### ✅ Lihat active sessions (mobile)
+# → Salin salah satu id dari response ke @session_id
+GET {{base}}/auth/sessions
+Authorization: Bearer {{at_mobile}}
+
+###
+
+### ❌ Tanpa Authorization header → 401
+GET {{base}}/auth/sessions
+
+###
+
+### ❌ Format salah (tidak ada "Bearer ") → 401
+GET {{base}}/auth/sessions
+Authorization: {{at_web}}
+
+###
+
+### ❌ Token palsu → 401 INVALID_TOKEN
+GET {{base}}/auth/sessions
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmYWtlIiwidHlwZSI6ImFjY2VzcyIsImV4cCI6MX0.fakesig
+
+###
+
+### ✅ Revoke session tertentu by ID
+# Isi @session_id dari response GET /auth/sessions
+DELETE {{base}}/auth/sessions/{{session_id}}
+Authorization: Bearer {{at_mobile}}
+
+###
+
+### ❌ Revoke session yang tidak ada / milik user lain → 404
+DELETE {{base}}/auth/sessions/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{at_mobile}}
+
+
+# ================================================================
+# 4. TOKEN REFRESH & ROTATION
+# ================================================================
+
+### ✅ Rotate refresh token (web)
+# Expected → token baru, token lama di-revoke di PostgreSQL
+# → Update @at_web dan @rt_web dengan token baru
+POST {{base}}/auth/refresh
+Content-Type: {{ct}}
+
+{
+  "refreshToken": "{{rt_web}}"
+}
+
+###
+
+### ✅ Rotate refresh token (mobile)
+POST {{base}}/auth/refresh
+Content-Type: {{ct}}
+
+{
+  "refreshToken": "{{rt_desktop}}"
+}
+
+###
+
+### ❌ Pakai refresh token LAMA setelah rotate → 401 TOKEN_REUSE_DETECTED
+# Ini simulasi attacker pakai token lama
+# Expected → seluruh family di-revoke, user harus login ulang
+POST {{base}}/auth/refresh
+Content-Type: {{ct}}
+
+{
+  "refreshToken": "{{rt_web}}"
+}
+
+###
+
+### ❌ Token acak → 401 INVALID_TOKEN
+POST {{base}}/auth/refresh
+Content-Type: {{ct}}
+
+{
+  "refreshToken": "ini.bukan.token.valid.sama.sekali"
+}
+
+###
+
+### ❌ Body kosong → 400 MISSING_TOKEN
+POST {{base}}/auth/refresh
+Content-Type: {{ct}}
+
+{}
+
+
+# ================================================================
+# 5. LOGOUT & BLACKLIST CHECK
+# ================================================================
+
+### ✅ Logout (web) — sertakan refreshToken untuk revoke sekaligus
+# Setelah ini:
+#   - access token masuk KV blacklist + Cache API "1"
+#   - refresh token is_revoked = true di PostgreSQL
+POST {{base}}/auth/logout
+Content-Type: {{ct}}
+Authorization: Bearer {{at_web}}
+
+{
+  "refreshToken": "{{rt_web}}"
+}
+
+###
+
+### ❌ Pakai access token yang sudah logout → 401 TOKEN_REVOKED
+# Cache API langsung HIT "1" → tolak tanpa ke KV
+# Ini membuktikan blacklist via Cache API bekerja
+GET {{base}}/auth/sessions
+Authorization: Bearer {{at_web}}
+
+###
+
+### ✅ Logout tanpa sertakan refreshToken (hanya blacklist access token)
+# Refresh token tetap aktif — bisa dipakai untuk dapat token baru
+POST {{base}}/auth/logout
+Content-Type: {{ct}}
+Authorization: Bearer {{at_mobile}}
+
+{}
+
+###
+
+### ✅ Logout semua device
+# Semua refresh token user di-revoke di PostgreSQL
+# Access token aktif expire sendiri dalam max 1 jam
+POST {{base}}/auth/logout-all
+Authorization: Bearer {{at_mobile}}
+
+
+# ================================================================
+# 6. RATE LIMIT SIMULATION (IP: 10.0.0.55)
+# ================================================================
+
+### Attempt #1 — IP bersih, mulai counter
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 10.0.0.55
+
+{ "email": "web@example.com", "password": "salah1", "clientType": "web" }
+
+###
+
+### Attempt #2
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 10.0.0.55
+
+{ "email": "web@example.com", "password": "salah2", "clientType": "web" }
+
+###
+
+### Attempt #3
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 10.0.0.55
+
+{ "email": "web@example.com", "password": "salah3", "clientType": "web" }
+
+###
+
+### Attempt #4
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 10.0.0.55
+
+{ "email": "web@example.com", "password": "salah4", "clientType": "web" }
+
+###
+
+### Attempt #5
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 10.0.0.55
+
+{ "email": "web@example.com", "password": "salah5", "clientType": "web" }
+
+###
+
+### ❌ Attempt #6 → 429 RATE_LIMITED
+# Expected → "Terlalu banyak percobaan login. Coba lagi dalam 5 menit."
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 10.0.0.55
+
+{ "email": "web@example.com", "password": "salah6", "clientType": "web" }
+
+###
+
+### ✅ IP berbeda → tetap bisa login normal
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+X-Forwarded-For: 10.0.0.99
+
+{
+  "email": "web@example.com",
+  "password": "Password123",
+  "clientType": "web"
+}
+
+
+# ================================================================
+# 7. EMAIL VERIFICATION
+# ================================================================
+
+@verify_token = PASTE_TOKEN_FROM_REGISTER_RESPONSE_OR_CONSOLE_LOG
+
+### ✅ Register user baru → seharusnya muncul pesan verifikasi
+# Expected → 201, message: "Registrasi berhasil. Silakan cek email untuk verifikasi."
+# Di dev mode (wrangler dev), verification URL akan muncul di console log
+POST {{base}}/auth/register
+Content-Type: {{ct}}
+
+{
+  "email": "admin@santrikita.com",
+  "password": "Password123"
+}
+
+###
+
+### ❌ Login sebelum verifikasi → 403 EMAIL_NOT_VERIFIED
+# Expected → "Silakan verifikasi email Anda terlebih dahulu"
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+
+{
+  "email": "verify-test@example.com",
+  "password": "Password123",
+  "clientType": "web"
+}
+
+###
+
+### ✅ Verifikasi email dengan token valid
+# Salin token dari console log (wrangler dev) ke @verify_token
+# Expected → 200, "Email berhasil diverifikasi. Silakan login."
+GET {{base}}/auth/verify-email?token={{verify_token}}
+###
+
+### ❌ Pakai token yang sudah digunakan → 401 VERIFICATION_TOKEN_USED
+POST {{base}}/auth/verify-email
+Content-Type: {{ct}}
+
+{
+  "token": "{{verify_token}}"
+}
+
+###
+
+### ❌ Token palsu/random → 401 INVALID_VERIFICATION_TOKEN
+POST {{base}}/auth/verify-email
+Content-Type: {{ct}}
+
+{
+  "token": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+}
+
+###
+
+### ❌ Body kosong → 400 MISSING_TOKEN
+POST {{base}}/auth/verify-email
+Content-Type: {{ct}}
+
+{}
+
+###
+
+### ✅ Login setelah verifikasi → berhasil
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+
+{
+  "email": "verify-test@example.com",
+  "password": "Password123",
+  "clientType": "web"
+}
+
+###
+
+### ✅ Resend verification (untuk user belum terverifikasi)
+# Register user baru dulu, lalu resend
+POST {{base}}/auth/resend-verification
+Content-Type: {{ct}}
+
+{
+  "email": "ibnsaeran04@gmail.com"
+}
+
+###
+
+### ❌ Resend untuk email yang sudah diverifikasi → 400 ALREADY_VERIFIED
+POST {{base}}/auth/resend-verification
+Content-Type: {{ct}}
+
+{
+  "email": "verify-test@example.com"
+}
+
+###
+
+### ✅ Resend untuk email tidak dikenal → tetap 200 (anti enumeration)
+POST {{base}}/auth/resend-verification
+Content-Type: {{ct}}
+
+{
+  "email": "tidakada@example.com"
+}
+
+
+# ================================================================
+# 8. GOOGLE OAUTH LOGIN
+# ================================================================
+
+### ✅ Web flow: redirect ke Google consent screen
+# Expected → 302 redirect ke accounts.google.com
+# Buka URL ini di browser untuk full test
+GET {{base}}/auth/google/login?clientType=web
+
+###
+
+### ❌ Callback tanpa code + state → 400 MISSING_PARAMS
+GET {{base}}/auth/google/callback
+
+###
+
+### ❌ Callback dengan state invalid → 400 INVALID_STATE
+GET {{base}}/auth/google/callback?code=fake-code&state=invalid-state
+
+###
+
+### ✅ Mobile flow: verify Google ID token
+# Ganti @google_id_token dengan ID token asli dari Google Sign-In SDK (Expo)
+@google_id_token = eyJhbGciOiJSUzI1NiIsImtpZCI6IjI1MDdmNTFhZjJhMTYyNDY3MDc0ODQ2NzRhNDJhZTNjMmI2MjMxOWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI0NjE1MDYxMTY4OS1wcTdidmJwMW45MWFhOXY2cWJuNzZncDhzcmJibHNtYi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjQ2MTUwNjExNjg5LXBxN2J2YnAxbjkxYWE5djZxYm43NmdwOHNyYmJsc21iLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA4MjQzMDQzOTI5NDY0MTg4OTQ5IiwiZW1haWwiOiJpYnJvaGltc2Fpcm9ueUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6Ik55ODNrYmtvTEhsR0VidG0ySDhTREEiLCJuYW1lIjoiSWJyb2hpbSBTYWlyb255IChCYW1ic0RldikiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSmRsSWt3dDB3cTFsV2puc2dSZ3F5TjZnZTRGaW84U093Zm5abEN3VV9JQ2V3TktIYkM9czk2LWMiLCJnaXZlbl9uYW1lIjoiSWJyb2hpbSIsImZhbWlseV9uYW1lIjoiU2Fpcm9ueSIsImlhdCI6MTc3MjYyMDA4NiwiZXhwIjoxNzcyNjIzNjg2fQ.EUw8HYvmjY8pcd30nqDsIljFtFjRpAW20Je_zg59FF1C2g4Og5crx6CC5fITCz-eD186jaY4p8GGzN7eHCyboPO_OQBbx3oziYOLjXHGYYFtCZoSvsEf5srY4wHYLT3JnwDr2jZXK8anRnQPMRCgZ5Ri_WOtR-HkXKAgvvk9iU6-zS6I2rzSoaZhlyvVBHXNnIKkDBqiD7BNQ6_gWW5UVQo1bnnhKAn18Ed_j8ZK7x4L-M--NTMl5AtAVxv5yTpYDzPfLf_IeEVhPpswf5k3haoDFcPrBAG4tEs0hlcpz8mrIp1x8Tsx3ZeS2dcrgMBq9CAM8-R0azi2tY5zqJ1Dpw
+
+POST {{base}}/auth/google/token
+Content-Type: {{ct}}
+
+{
+  "idToken": "{{google_id_token}}",
+  "clientType": "mobile"
+}
+
+###
+
+### ❌ Mobile flow: tanpa idToken → 400 MISSING_ID_TOKEN
+POST {{base}}/auth/google/token
+Content-Type: {{ct}}
+
+{
+  "clientType": "mobile"
+}
+
+###
+
+### ❌ OAuth-only user coba login manual → 400 PASSWORD_NOT_SET
+# Test ini berlaku setelah user sudah terdaftar via Google (tanpa password)
+POST {{base}}/auth/login
+Content-Type: {{ct}}
+
+{
+  "email": "google-only-user@gmail.com",
+  "password": "Password123",
+  "clientType": "web"
+}
+
+# ================================================================
+# 9. PASSWORD RESET
+# ================================================================
+
+### ✅ Request reset password (forgot password)
+# @name forgot_password
+POST {{base}}/auth/forgot-password
+Content-Type: {{ct}}
+
+{
+  "email": "ibrohimsairony@gmail.com"
+}
+
+### ✅ Reset password dengan token
+# @name reset_password
+POST {{base}}/auth/reset-password
+Content-Type: {{ct}}
+
+{
+  "token": "5f938f83e4709f94d36566dd94c04c23d9ffe829c6d784fd83743961a84e9b36",
+  "newPassword": "NewPassword123!"
+}
+
+# ================================================================
+# 10. AVATAR SETTINGS
+# ================================================================
+
+### ✅ Update avatar via File Upload (R2 Storage)
+# @name update_avatar_file
+PUT {{base}}/api/settings/avatar
+Authorization: Bearer {{at_web}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="woman.jpg"
+Content-Type: image/png
+
+< ./public/woman.jpg
+--boundary--

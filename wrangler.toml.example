@@ -1,0 +1,46 @@
+# name = "example-auth-wrangler"
+main = "src/index.ts"
+compatibility_date = "2026-03-13"
+compatibility_flags = ["nodejs_compat"]
+
+[[kv_namespaces]]
+binding = "KV"
+id = "xxx"
+
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "xxx"
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "xxx"
+localConnectionString = "postgresql://postgres:asdfasdf@localhost:5432/example"
+
+
+[ai]
+binding = "AI"
+
+[observability.logs]
+enabled = false
+invocation_logs = true
+
+[triggers]
+crons = ["0 3 * * *"] # Run at 03:00 UTC daily
+
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "belajar"
+
+
+[vars]
+BUCKET_PUBLIC_URL = "https://pub-bd8f080d825e4cc59fe63d4cab1443cb.r2.dev" # Ganti dengan URL public R2 milikmu
+EMAIL_FROM = "BukuKita <noreply@penakita.com>"
+
+
+# JWT secrets via: wrangler secret put JWT_SECRET
+# JWT secrets via: wrangler secret put JWT_REFRESH_SECRET
+# Email via:       wrangler secret put RESEND_API_KEY
+# App URL via:     wrangler secret put APP_URL
+# Google OAuth:    wrangler secret put GOOGLE_CLIENT_ID
+# Google OAuth:    wrangler secret put GOOGLE_CLIENT_SECRET
