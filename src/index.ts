@@ -7,9 +7,17 @@ import {
   authRoutes,
   settingRoutes,
   cleanupExpiredTokens,
+  cleanupExpiredPasswordResets,
+  cleanupExpiredEmailVerifications,
   type AuthBindings,
   type AuthVariables,
 } from "@bambsdev/auth";
+
+import {
+  notifyRoutes,
+  deviceTokenRoutes,
+  cleanupExpiredNotifications,
+} from "@bambsdev/notify";
 
 import { dbMiddleware, type BukukitaVariables } from "./middleware/db";
 
@@ -30,6 +38,10 @@ app.use("/api/*", dbMiddleware);
 // Mount auth routes
 app.route("/auth", authRoutes);
 app.route("/api/settings", settingRoutes);
+
+// Mount notify routes
+app.route("/api/devices", deviceTokenRoutes);
+app.route("/api/notifications", notifyRoutes);
 
 // Mount OpenAPI spec and Swagger UI
 app.doc("/openapi.json", {
@@ -78,8 +90,10 @@ export default {
     env: AuthBindings,
     _ctx: ExecutionContext,
   ) {
-    await cleanupExpiredTokens(
-      env.LOCAL_DATABASE_URL || env.HYPERDRIVE.connectionString,
-    );
+    const connectionString = env.LOCAL_DATABASE_URL || env.HYPERDRIVE.connectionString;
+    await cleanupExpiredTokens(connectionString);
+    await cleanupExpiredPasswordResets(connectionString);
+    await cleanupExpiredEmailVerifications(connectionString);
+    await cleanupExpiredNotifications(connectionString);
   },
 };

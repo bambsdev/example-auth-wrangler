@@ -34,7 +34,7 @@ bucket_name = "belajar"
 
 
 [vars]
-BUCKET_PUBLIC_URL = "https://pub-bd8f080d825e4cc59fe63d4cab1443cb.r2.dev" # Ganti dengan URL public R2 milikmu
+BUCKET_PUBLIC_URL = "https://xxxxx.r2.dev" # Ganti dengan URL public R2 milikmu
 EMAIL_FROM = "BukuKita <noreply@penakita.com>"
 
 
@@ -44,3 +44,7 @@ EMAIL_FROM = "BukuKita <noreply@penakita.com>"
 # App URL via:     wrangler secret put APP_URL
 # Google OAuth:    wrangler secret put GOOGLE_CLIENT_ID
 # Google OAuth:    wrangler secret put GOOGLE_CLIENT_SECRET
+
+# FCM (Firebase Cloud Messaging):
+# FCM Project ID:    wrangler secret put FCM_PROJECT_ID
+# FCM Service Key:   wrangler secret put FCM_SERVICE_ACCOUNT_KEY

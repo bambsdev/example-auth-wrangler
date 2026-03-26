@@ -633,3 +633,58 @@ Content-Type: image/png
 
 < ./public/woman.jpg
 --boundary--
+
+# ================================================================
+# 11. DEVICE TOKENS (FCM)
+# ================================================================
+
+### ✅ Register Device Token
+# Expected → 201 { success: true, data: { ... } }
+POST {{base}}/api/devices/device-token
+Authorization: Bearer {{at_mobile}}
+Content-Type: {{ct}}
+
+{
+  "token": "fMq3R-xyz-pQR-123",
+  "platform": "android"
+}
+
+### ✅ List Device Tokens
+GET {{base}}/api/devices/device-token
+Authorization: Bearer {{at_mobile}}
+
+### ✅ Delete Device Token
+DELETE {{base}}/api/devices/device-token
+Authorization: Bearer {{at_mobile}}
+Content-Type: {{ct}}
+
+{
+  "token": "fMq3R-xyz-pQR-123"
+}
+
+
+# ================================================================
+# 12. NOTIFICATIONS (In-App Feed)
+# ================================================================
+
+### ✅ List Notifications (All)
+GET {{base}}/api/notifications/notifications?limit=10
+Authorization: Bearer {{at_mobile}}
+
+### ✅ List Unread Notifications Only
+GET {{base}}/api/notifications/notifications?onlyUnread=true
+Authorization: Bearer {{at_mobile}}
+
+### ✅ Get Unread Count (for badges)
+GET {{base}}/api/notifications/notifications/unread-count
+Authorization: Bearer {{at_mobile}}
+
+### ✅ Mark Single Notification as Read
+# @name mark_read
+# Ganti :id dengan ID notifikasi asli
+PUT {{base}}/api/notifications/notifications/550e8400-e29b-41d4-a716-446655440000/read
+Authorization: Bearer {{at_mobile}}
+
+### ✅ Mark ALL Notifications as Read
+PUT {{base}}/api/notifications/notifications/read-all
+Authorization: Bearer {{at_mobile}}
