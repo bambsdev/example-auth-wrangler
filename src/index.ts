@@ -1,4 +1,6 @@
-import { ExecutionContext, Hono } from "hono";
+import { ExecutionContext } from "hono";
+import { OpenAPIHono } from "@hono/zod-openapi";
+import { swaggerUI } from "@hono/swagger-ui";
 
 import {
   customLogger,
@@ -11,7 +13,7 @@ import {
 
 import { dbMiddleware, type BukukitaVariables } from "./middleware/db";
 
-const app = new Hono<{
+const app = new OpenAPIHono<{
   Bindings: AuthBindings;
   Variables: BukukitaVariables;
 }>();
@@ -28,6 +30,23 @@ app.use("/api/*", dbMiddleware);
 // Mount auth routes
 app.route("/auth", authRoutes);
 app.route("/api/settings", settingRoutes);
+
+// Mount OpenAPI spec and Swagger UI
+app.doc("/openapi.json", {
+  openapi: "3.0.0",
+  info: {
+    version: "1.0.0",
+    title: "BukuKita API",
+    description: "API Endpoint Documentation",
+  },
+});
+
+app.get(
+  "/doc",
+  swaggerUI({
+    url: "/openapi.json",
+  }),
+);
 
 // Test Route — Verifikasi akses tabel Auth dan tabel lokal
 app.get("/api/test-db", async (c) => {

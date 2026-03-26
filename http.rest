@@ -613,7 +613,7 @@ POST {{base}}/auth/reset-password
 Content-Type: {{ct}}
 
 {
-  "token": "5f938f83e4709f94d36566dd94c04c23d9ffe829c6d784fd83743961a84e9b36",
+  "token": "xxxx",
   "newPassword": "NewPassword123!"
 }
 
